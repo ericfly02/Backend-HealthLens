@@ -3,6 +3,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+// CORS configuration
+const corsOptions = {
+    origin: 'https://www.healthlens.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Add 'OPTIONS'
+    allowedHeaders: ['Content-Type', 'Authorization'], // Add allowed headers
+    credentials: true
+};
+
+
+// Middleware
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.options('*', cors(corsOptions)); // Handle preflight requests for all routes
+    
 // Import Routes
 const authRoutes = require('./routes/auth');
 const chatRoutes = require('./routes/chat');
@@ -12,17 +26,6 @@ const mapRoutes = require('./routes/map');
 
 // Initialize Express app
 const app = express();
-
-// CORS configuration
-const corsOptions = {
-    origin: 'https://www.healthlens.app', // Allow requests only from your frontend domain
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-    credentials: true // Allow cookies and other credentials
-};
-
-// Middleware
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
 
 // Route handlers
 app.use('/auth', authRoutes);
