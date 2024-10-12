@@ -13,8 +13,15 @@ const mapRoutes = require('./routes/map');
 // Initialize Express app
 const app = express();
 
+// CORS configuration
+const corsOptions = {
+    origin: 'https://www.healthlens.app', // Allow requests only from your frontend domain
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+    credentials: true // Allow cookies and other credentials
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
 // Route handlers
