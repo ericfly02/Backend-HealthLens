@@ -11,21 +11,20 @@ const corsOptions = {
     credentials: true
 };
 
+// Initialize Express app
+const app = express();
 
 // Middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.options('*', cors(corsOptions)); // Handle preflight requests for all routes
-    
+
 // Import Routes
 const authRoutes = require('./routes/auth');
 const chatRoutes = require('./routes/chat');
 const userRoutes = require('./routes/userRoutes');
 const mapRoutes = require('./routes/map');
 //const speechToTextRoutes = require('./routes/speechToTextRoutes');
-
-// Initialize Express app
-const app = express();
 
 // Route handlers
 app.use('/auth', authRoutes);
