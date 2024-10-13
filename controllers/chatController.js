@@ -26,6 +26,8 @@ exports.startConversation = async (req, res) => {
         session = sessionId;
         }
 
+        console.log('Session ID:', session);
+
         // Send disease message to Watson Assistant
         const messageResponse = await assistant.message({
         assistantId: process.env.WATSON_ASSISTANT_ID,
@@ -35,6 +37,8 @@ exports.startConversation = async (req, res) => {
             'text': `The user uploaded an image indicating ${disease}. Let's discuss this further.`,
         },
         });
+
+        console.log('Watson Assistant response:', messageResponse.result.output.generic.map(item => item.text));
 
         res.json({
         sessionId: session,
