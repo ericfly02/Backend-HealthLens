@@ -4,7 +4,7 @@ const { IamAuthenticator } = require('ibm-watson/auth');
 
 // IBM Watson Assistant setup
 const assistant = new AssistantV2({
-    //version: process.env.WATSON_ASSISTANT_VERSION,
+    version: process.env.WATSON_ASSISTANT_VERSION,
     authenticator: new IamAuthenticator({
         apikey: process.env.WATSON_API_KEY,
     }),
