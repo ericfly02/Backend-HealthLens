@@ -16,6 +16,8 @@ exports.startConversation = async (req, res) => {
     const { sessionId, disease } = req.body;
 
     console.log('Request body:', req.body);
+    console.log('Disease:', disease);
+    console.log('Session ID:', sessionId);
     
     try {
         let session;
@@ -23,10 +25,12 @@ exports.startConversation = async (req, res) => {
         const sessionResponse = await assistant.createSession({
             assistantId: process.env.WATSON_ASSISTANT_ID,
         });
+        console.log('Watson Assistant response:', sessionResponse);
         session = sessionResponse.result.session_id;
         console.log('New session created:', session);
         } else {
         session = sessionId;
+        console.log('Existing session used:', session);
         }
 
         console.log('Session ID:', session);
