@@ -154,7 +154,7 @@ const sendEmailReport = async (req, res) => {
                     <table cellpadding="0" cellspacing="0" style="width: 100%;">
                         <tr>
                             <td style="text-align: center;">
-                                <img src="https://backend-health-lens.vercel.app/public/images/logo192.png" alt="HealthLens Logo" style="width: 40px; height: 40px;" />
+                                <img src="https://backend-health-lens.vercel.app/public/images/logo512.png" alt="HealthLens Logo" style="width: 40px; height: 40px;" />
                                 <h2 style="color: #4338ca; font-size: 24px; margin: 10px 0;">HealthLens</h2>
                                 <p style="font-size: 16px; margin: 0 0 20px 0;">Your personal health companion.</p>
                                 <a href="https://www.healthlens.app/" style="display: inline-block; background-color: #6366f1; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 4px; font-size: 16px; font-weight: bold;">
