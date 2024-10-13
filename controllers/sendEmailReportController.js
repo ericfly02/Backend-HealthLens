@@ -5,6 +5,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Function to send email
 const sendEmailReport = async (req, res) => {
+  // get today's date
+  const today = new Date();
+  const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
   console.log('Sending email report');
   try {
     const user = req.user; // Assuming user is added to req in the middleware
@@ -44,7 +47,7 @@ const sendEmailReport = async (req, res) => {
                     <table cellpadding="0" cellspacing="0" style="width: 100%;">
                         <tr>
                             <td>
-                                <img src="/placeholder.svg?height=40&width=40" alt="HealthLens Logo" style="width: 40px; height: 40px;" />
+                                <img src="https://drive.google.com/file/d/1CHL0DQZHolsthNDiPXb6J-XjGVJtyCCD/view?usp=drive_link?height=40&width=40" alt="HealthLens Logo" style="width: 40px; height: 40px;" />
                             </td>
                             <td style="text-align: right;">
                                 <h1 style="color: #4338ca; font-size: 24px; margin: 0;">Health Report</h1>
@@ -53,22 +56,22 @@ const sendEmailReport = async (req, res) => {
                     </table>
                     
                     <p style="font-size: 14px; color: #6366f1; margin-top: 20px; margin-bottom: 30px;">
-                        Track your health journey with HealthLens. <a href="#" style="color: #4338ca; text-decoration: none;">View your dashboard</a>
+                        Track your health journey with HealthLens. <a href="https://www.healthlens.app/" style="color: #4338ca; text-decoration: none;">View your dashboard</a>
                     </p>
 
                     <table cellpadding="0" cellspacing="0" style="width: 100%; margin-bottom: 30px;">
                         <tr>
                             <td style="width: 50%;">
                                 <p style="font-size: 14px; color: #6366f1; margin: 0 0 5px 0;">HEALTHLENS ID</p>
-                                <p style="font-size: 14px; margin: 0 0 15px 0;">john.doe@example.com</p>
+                                <p style="font-size: 14px; margin: 0 0 15px 0;">${email}</p>
                                 <p style="font-size: 14px; color: #6366f1; margin: 0 0 5px 0;">REPORT DATE</p>
-                                <p style="font-size: 14px; margin: 0;">October 11, 2024</p>
+                                <p style="font-size: 14px; margin: 0;">${date}</p>
                             </td>
                             <td style="width: 50%;">
                                 <p style="font-size: 14px; color: #6366f1; margin: 0 0 5px 0;">REPORT TO</p>
-                                <p style="font-size: 14px; margin: 0 0 5px 0;">John Doe</p>
-                                <p style="font-size: 14px; margin: 0 0 5px 0;">johndoe</p>
-                                <p style="font-size: 14px; margin: 0;">USA</p>
+                                <p style="font-size: 14px; margin: 0 0 5px 0;">${firstName }</p>
+                                <p style="font-size: 14px; margin: 0 0 5px 0;">${lastName}</p>
+                                <p style="font-size: 14px; margin: 0;">${username}</p>
                             </td>
                         </tr>
                     </table>
@@ -102,7 +105,7 @@ const sendEmailReport = async (req, res) => {
                                 <p style="font-size: 16px; margin: 0;">Height</p>
                             </td>
                             <td style="padding: 10px 0; border-bottom: 1px solid #f5f3ff; text-align: right;">
-                                <p style="font-size: 16px; margin: 0;">180 cm</p>
+                                <p style="font-size: 16px; margin: 0;">${height}</p>
                             </td>
                         </tr>
                         <tr>
@@ -110,7 +113,7 @@ const sendEmailReport = async (req, res) => {
                                 <p style="font-size: 16px; margin: 0;">Weight</p>
                             </td>
                             <td style="padding: 10px 0; border-bottom: 1px solid #f5f3ff; text-align: right;">
-                                <p style="font-size: 16px; margin: 0;">75 kg</p>
+                                <p style="font-size: 16px; margin: 0;">${weight}</p>
                             </td>
                         </tr>
                         <tr>
@@ -118,7 +121,7 @@ const sendEmailReport = async (req, res) => {
                                 <p style="font-size: 16px; margin: 0;">Sex</p>
                             </td>
                             <td style="padding: 10px 0; text-align: right;">
-                                <p style="font-size: 16px; margin: 0;">Male</p>
+                                <p style="font-size: 16px; margin: 0;">${sex}</p>
                             </td>
                         </tr>
                     </table>
@@ -151,10 +154,10 @@ const sendEmailReport = async (req, res) => {
                     <table cellpadding="0" cellspacing="0" style="width: 100%;">
                         <tr>
                             <td style="text-align: center;">
-                                <img src="/placeholder.svg?height=40&width=40" alt="HealthLens Icon" style="width: 40px; height: 40px;" />
+                                <img src="https://drive.google.com/file/d/1CHL0DQZHolsthNDiPXb6J-XjGVJtyCCD/view?usp=drive_link?height=40&width=40" alt="HealthLens Icon" style="width: 40px; height: 40px;" />
                                 <h2 style="color: #4338ca; font-size: 24px; margin: 10px 0;">HealthLens</h2>
                                 <p style="font-size: 16px; margin: 0 0 20px 0;">Your personal health companion.</p>
-                                <a href="#" style="display: inline-block; background-color: #6366f1; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 4px; font-size: 16px; font-weight: bold;">
+                                <a href="https://www.healthlens.app/" style="display: inline-block; background-color: #6366f1; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 4px; font-size: 16px; font-weight: bold;">
                                     Open HealthLens App
                                 </a>
                             </td>
