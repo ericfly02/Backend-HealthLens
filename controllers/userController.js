@@ -52,24 +52,41 @@ exports.updateUser = async (req, res) => {
   };
 
 // Increment user scan count
+// Increment user scan count
 exports.incrementScans = async (req, res) => {
   const userId = req.user.userId;  // Assuming JWT middleware sets req.user
 
   try {
-    const { data, error } = await supabase
+    // Fetch the current scan count
+    const { data: user, error: fetchError } = await supabase
       .from('users')
-      .update({ scans: supabase.raw('scans + 1') })
-      .eq('id', userId);
+      .select('scans')
+      .eq('id', userId)
+      .single();
 
-    if (error) {
-      return res.status(400).json({ message: 'Error incrementing scan count', error });
+    if (fetchError) {
+      return res.status(400).json({ message: 'Error fetching user data', fetchError });
     }
 
-    res.status(200).json({ message: 'Scan count incremented successfully', data });
+    // Increment the scan count
+    const newScansCount = user.scans + 1;
+
+    // Update the scan count in the database
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ scans: newScansCount })
+      .eq('id', userId);
+
+    if (updateError) {
+      return res.status(400).json({ message: 'Error updating scan count', updateError });
+    }
+
+    res.status(200).json({ message: 'Scan count incremented successfully' });
   } catch (err) {
     console.error('Error incrementing scan count:', err);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
   
