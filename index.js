@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 
 // CORS configuration
 const corsOptions = {
@@ -17,6 +18,7 @@ const app = express();
 // Middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use('/public', express.static(path.join(__dirname, 'public')));
 app.options('*', cors(corsOptions)); // Handle preflight requests for all routes
 
 // Import Routes
