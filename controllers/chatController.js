@@ -15,6 +15,8 @@ const assistant = new AssistantV2({
 exports.startConversation = async (req, res) => {
     const { sessionId, disease } = req.body;
 
+    console.log('Request body:', req.body);
+    
     try {
         let session;
         if (!sessionId) {
@@ -22,6 +24,7 @@ exports.startConversation = async (req, res) => {
             assistantId: process.env.WATSON_ASSISTANT_ID,
         });
         session = sessionResponse.result.session_id;
+        console.log('New session created:', session);
         } else {
         session = sessionId;
         }
