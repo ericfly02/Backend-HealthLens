@@ -13,4 +13,7 @@ router.patch('/update', authMiddleware, userController.updateUser);
 
 router.post('/email-report', authMiddleware, sendEmailReport);
 
+router.post('/increment-scans', authMiddleware, incrementScans);
+
+
 module.exports = router;

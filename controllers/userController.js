@@ -50,4 +50,26 @@ exports.updateUser = async (req, res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   };
+
+// Increment user scan count
+exports.incrementScans = async (req, res) => {
+  const userId = req.user.userId;  // Assuming JWT middleware sets req.user
+
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .update({ scans: supabase.raw('scans + 1') })
+      .eq('id', userId);
+
+    if (error) {
+      return res.status(400).json({ message: 'Error incrementing scan count', error });
+    }
+
+    res.status(200).json({ message: 'Scan count incremented successfully', data });
+  } catch (err) {
+    console.error('Error incrementing scan count:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
   
