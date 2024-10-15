@@ -61,6 +61,6 @@ exports.startConversation = async (req, res) => {
         });
     } catch (error) {
         console.error('Error during interaction with Watson Assistant:', error);
-        res.status(500).json({ error: 'Error interacting with Watson Assistant' });
+        res.status(500).json({ error: error.message });
     }
 };
