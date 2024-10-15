@@ -18,6 +18,7 @@ exports.getNearbyDoctors = async (req, res) => {
 
     const nearbySearchUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&keyword=${encodeURIComponent(keyword)}&type=doctor&key=${apiKey}`;
 
+    console.log('Nearby doctors URL:', nearbySearchUrl);
     try {
         const nearbySearchResponse = await axios.get(nearbySearchUrl);
         const places = nearbySearchResponse.data.results;
