@@ -13,7 +13,7 @@ const assistant = new AssistantV2({
 
     // Start conversation with Watson Assistant
 exports.startConversation = async (req, res) => {
-    const { sessionId, disease } = req.body;
+    const { sessionId, disease, message } = req.body;
 
     console.log('Request body:', req.body);
     console.log('Disease:', disease);
@@ -43,12 +43,13 @@ exports.startConversation = async (req, res) => {
         console.log('Session ID:', session);
 
         // Send disease message to Watson Assistant
+        console.log('Sending disease to Watson Assistant:', disease);
         const messageResponse = await assistant.message({
         assistantId: process.env.WATSON_ASSISTANT_ID,
         sessionId: session,
         input: {
             'message_type': 'text',
-            'text': `The user uploaded an image indicating ${disease}. Let's discuss this further.`,
+            'text': `${message}`,
         },
         });
 
