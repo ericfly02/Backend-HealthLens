@@ -19,6 +19,13 @@ exports.startConversation = async (req, res) => {
     console.log('Disease:', disease);
     console.log('Session ID:', sessionId);
     
+    // Make a credentials console log to check if the credentials are correct
+    console.log("WATSON_ASSISTANT_VERSION: ", process.env.WATSON_ASSISTANT_VERSION);
+    console.log("WATSON_API_KEY: ", process.env.WATSON_API_KEY);
+    console.log("WATSON_URL: ", process.env.WATSON_URL);
+    console.log("WATSON_ASSISTANT_ID: ", process.env.WATSON_ASSISTANT_ID);
+    console.log("WATSON_URL: ", process.env.WATSON_URL);
+
     try {
         let session;
         if (!sessionId) {
