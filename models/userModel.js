@@ -14,7 +14,7 @@ exports.findUserByEmail = async (email) => {
 exports.findUserById = async (id) => {
   return await supabase
     .from('users')
-    .select('id, name, last_name, email, username, height, weight, sex, created_at, updated_at, scans')
+    .select('id, name, last_name, email, username, height, weight, sex, created_at, updated_at, scans, diseases')
     .eq('id', id)
     .single();
 };

@@ -88,5 +88,41 @@ exports.incrementScans = async (req, res) => {
   }
 };
 
+exports.addDiseaseToUser = async (req, res) => {
+  const { disease } = req.body;
+  const userId = req.user.userId;  // Assuming JWT middleware sets req.user
+
+  try {
+    // Fetch the current list of diseases
+    const { data: user, error: fetchError } = await supabase
+      .from('users')
+      .select('diseases')
+      .eq('id', userId)
+      .single();
+
+    if (fetchError || !user) {
+      return res.status(400).json({ message: 'Error fetching user data', fetchError });
+    }
+
+    // Append the new disease to the list (or create a new list if none exists)
+    const updatedDiseases = user.diseases ? [...user.diseases, disease] : [disease];
+
+    // Update the user's disease list in the database
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ diseases: updatedDiseases })
+      .eq('id', userId);
+
+    if (updateError) {
+      return res.status(400).json({ message: 'Error updating diseases', updateError });
+    }
+
+    res.status(200).json({ message: 'Disease added successfully' });
+  } catch (err) {
+    console.error('Error updating diseases:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
   

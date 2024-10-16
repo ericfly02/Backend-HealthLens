@@ -15,5 +15,6 @@ router.post('/email-report', authMiddleware, sendEmailReport);
 
 router.post('/increment-scans', authMiddleware, userController.incrementScans);
 
+router.post('/add-disease', authMiddleware, userController.addDiseaseToUser);
 
 module.exports = router;

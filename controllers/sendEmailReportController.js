@@ -11,16 +11,28 @@ const sendEmailReport = async (req, res) => {
   console.log('Sending email report');
   try {
     const user = req.user; // Assuming user is added to req in the middleware
-    const { firstName, lastName, email, username, height, weight, sex, totalScans, recentSymptoms, chatHistory } = req.body;
+    const { firstName, lastName, email, username, height, weight, sex, totalScans, chatHistory, diseases } = req.body;
 
     // Generate a personalized health tip
     const healthTips = [
-      "Stay hydrated! Aim for 8 glasses of water a day.",
-      "Take a 10-minute walk to boost your mood and energy.",
-      "Practice deep breathing for 5 minutes to reduce stress.",
-      "Eat a rainbow of fruits and vegetables for optimal nutrition.",
-      "Get 7-9 hours of sleep for better overall health.",
-    ];
+        "Stay hydrated! Aim for 8 glasses of water a day.",
+        "Take a 10-minute walk to boost your mood and energy.",
+        "Practice deep breathing for 5 minutes to reduce stress.",
+        "Eat a rainbow of fruits and vegetables for optimal nutrition.",
+        "Get 7-9 hours of sleep for better overall health.",
+        "Incorporate strength training exercises at least twice a week to build muscle.",
+        "Limit screen time, especially before bed, to improve sleep quality.",
+        "Take breaks during long periods of sitting to improve circulation.",
+        "Prioritize mental health by practicing mindfulness or meditation daily.",
+        "Choose whole grains over refined grains for better digestion and sustained energy.",
+        "Schedule regular health check-ups to monitor your overall health.",
+        "Engage in hobbies or activities that bring you joy and relaxation.",
+        "Reduce added sugars and processed foods for a healthier diet.",
+        "Spend time in nature to improve mood and mental clarity.",
+        "Keep a food journal to track eating habits and make healthier choices.",
+        "Socialize with friends and family regularly to boost emotional well-being."
+      ];
+      
     const randomTip = healthTips[Math.floor(Math.random() * healthTips.length)];
 
     // Create a progress bar for total scans
@@ -132,10 +144,11 @@ const sendEmailReport = async (req, res) => {
                     </div>
 
                     <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-                        <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Symptoms</h3>
+                        <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Diseases</h3>
                         <ul style="padding: 0 0 0 20px; margin: 0;">
-                            <li style="font-size: 16px; margin-bottom: 5px;">Headache</li>
-                            <li style="font-size: 16px; margin-bottom: 5px;">Fatigue</li>
+                            ${diseases.map(disease => `
+                                <li style="font-size: 16px; margin-bottom: 5px;">${disease}</li>
+                            `).join('')}
                         </ul>
                     </div>
 
