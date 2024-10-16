@@ -10,7 +10,8 @@ const sendEmailReport = async (req, res) => {
   const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
   try {
     const user = req.user; // Assuming user is added to req in the middleware
-    const { firstName, lastName, email, username, height, weight, sex, totalScans, diseases } = req.body;
+    const { name, last_name, email, username, height, weight, sex, totalScans, diseases } = req.body;
+    console.log('req.body:', req.body);
     console.log('firstName:', firstName);
     console.log('lastName:', lastName);
     const diseasesList = Array.isArray(diseases) ? diseases : JSON.parse(diseases);
@@ -78,8 +79,8 @@ const sendEmailReport = async (req, res) => {
                             </td>
                             <td style="width: 50%;">
                                 <p style="font-size: 14px; color: #6366f1; margin: 0 0 5px 0;">REPORT TO</p>
-                                <p style="font-size: 14px; margin: 0 0 5px 0;">${firstName }</p>
-                                <p style="font-size: 14px; margin: 0 0 5px 0;">${lastName}</p>
+                                <p style="font-size: 14px; margin: 0 0 5px 0;">${name}</p>
+                                <p style="font-size: 14px; margin: 0 0 5px 0;">${last_name}</p>
                                 <p style="font-size: 14px; margin: 0;">${username}</p>
                             </td>
                         </tr>
