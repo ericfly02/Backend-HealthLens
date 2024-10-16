@@ -12,8 +12,6 @@ const sendEmailReport = async (req, res) => {
     const user = req.user; // Assuming user is added to req in the middleware
     const { name, last_name, email, username, height, weight, sex, totalScans, diseases } = req.body;
     console.log('req.body:', req.body);
-    console.log('firstName:', firstName);
-    console.log('lastName:', lastName);
     const diseasesList = Array.isArray(diseases) ? diseases : JSON.parse(diseases);
 
     // Generate a personalized health tip
