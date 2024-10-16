@@ -3,6 +3,40 @@ const { Resend } = require('resend');
 // Initialize Resend with your API key
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Function to increment the reports count
+const incrementReportsCount = async (userId) => {
+    try {
+        // Fetch the current scan count
+        const { data: user, error: fetchError } = await supabase
+          .from('users')
+          .select('reports')
+          .eq('id', userId)
+          .single();
+    
+        if (fetchError) {
+          return res.status(400).json({ message: 'Error fetching user data', fetchError });
+        }
+    
+        // Increment the scan count
+        const newReportsCount = user.reports + 1;
+    
+        // Update the scan count in the database
+        const { error: updateError } = await supabase
+          .from('users')
+          .update({ reports: newReportsCount })
+          .eq('id', userId);
+    
+        if (updateError) {
+          return res.status(400).json({ message: 'Error updating reports count', updateError });
+        }
+    
+        res.status(200).json({ message: 'Reports count incremented successfully' });
+    } catch (err) {
+    console.error('Error incrementing report count:', err);
+    res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
 // Function to send email
 const sendEmailReport = async (req, res) => {
   // get today's date
@@ -160,6 +194,8 @@ const sendEmailReport = async (req, res) => {
       subject: 'Your HealthLens Health Report',
       html: emailTemplate,
     });
+
+    incrementReportsCount(user.id); // Increment the reports count
 
     if (error) {
       return res.status(500).json({ message: 'Failed to send email', error });
