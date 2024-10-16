@@ -18,6 +18,8 @@ const incrementReportsCount = async (userId) => {
         if (fetchError) {
           console.log('Error fetching user data', fetchError);
         }
+
+        console.log('User:', user);
     
         // Increment the scan count
         const newReportsCount = user.reports + 1;
