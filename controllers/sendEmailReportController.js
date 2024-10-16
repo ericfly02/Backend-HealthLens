@@ -143,21 +143,35 @@ const sendEmailReport = async (req, res) => {
                         <p style="font-size: 16px; margin: 0;">"Get 7-9 hours of sleep for better overall health."</p>
                     </div>
 
-                    <div style={{ backgroundColor: '#f5f3ff', borderRadius: '8px', padding: '20px', marginBottom: '30px' }}>
-                        <h3 style={{ color: '#4338ca', fontSize: '18px', margin: '0 0 10px 0' }}>Recent Symptoms</h3>
-                        <ul style={{ padding: '0 0 0 20px', margin: '0' }}>
-                            ${diseases && diseases.length > 0 ? (
-                                diseases.map((item, index) => (
-                                    <li key={index} style={{ fontSize: '16px', marginBottom: '5px' }}>
-                                        {item}
-                                    </li>
-                                ))
-                            ) : (
-                                <li style={{ fontSize: '16px', marginBottom: '5px' }}>No recent symptoms reported</li>
-                            )}
+                    <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+                        <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Symptoms</h3>
+                        <ul class="symptoms-list" style="padding: 0 0 0 20px; margin: 0;">
+                            <div>
+                                <script>
+                                    // Function to add diseases to the HTML
+                                    function addDiseasesToHTML(${diseases}) {
+                                        // Select the <ul> element where diseases will be added
+                                        const symptomsList = document.querySelector('.symptoms-list');
+                                        
+                                        // Clear existing items if necessary (optional)
+                                        symptomsList.innerHTML = ''; // Uncomment if you want to clear existing items
+
+                                        // Iterate over the diseases array and create list items
+                                        ${diseases}.forEach(${diseases} => {
+                                            const listItem = document.createElement('li');
+                                            listItem.textContent = ${diseases}; // Set the text content of the list item
+                                            listItem.style.fontSize = '16px'; // Apply styles
+                                            listItem.style.marginBottom = '5px'; // Apply styles
+                                            symptomsList.appendChild(listItem); // Append the new list item to the <ul>
+                                        });
+                                    }
+
+                                    // Call the function to add diseases
+                                    addDiseasesToHTML(${diseases});
+                                </script>
+                            </div>
                         </ul>
                     </div>
-
 
                     <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
                         <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Chat History</h3>
