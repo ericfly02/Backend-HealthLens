@@ -124,5 +124,40 @@ exports.addDiseaseToUser = async (req, res) => {
   }
 };
 
+exports.incrementReports = async (req, res) => {
+  const userId = req.user.userId;  // Assuming JWT middleware sets req.user
+
+  try {
+    // Fetch the current scan count
+    const { data: user, error: fetchError } = await supabase
+      .from('users')
+      .select('reports')
+      .eq('id', userId)
+      .single();
+
+    if (fetchError) {
+      return res.status(400).json({ message: 'Error fetching user data', fetchError });
+    }
+
+    // Increment the scan count
+    const newReportsCount = user.reports + 1;
+
+    // Update the scan count in the database
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ reports: newReportsCount })
+      .eq('id', userId);
+
+    if (updateError) {
+      return res.status(400).json({ message: 'Error updating reports count', updateError });
+    }
+
+    res.status(200).json({ message: 'Reports count incremented successfully' });
+  } catch (err) {
+    console.error('Error incrementing reports count:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
   

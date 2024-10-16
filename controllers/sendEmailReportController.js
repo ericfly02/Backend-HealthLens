@@ -1,43 +1,7 @@
 const { Resend } = require('resend');
-const { supabase } = require('../controllers/supabaseClient');
 
 // Initialize Resend with your API key
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Function to increment the reports count
-const incrementReportsCount = async (userId) => {
-    try {
-        console.log('Incrementing reports count for user:', userId);
-        // Fetch the current scan count
-        const { data: user, error: fetchError } = await supabase
-          .from('users')
-          .select('reports')
-          .eq('id', userId)
-          .single();
-    
-        if (fetchError) {
-          console.log('Error fetching user data', fetchError);
-        }
-
-        console.log('User:', user);
-    
-        // Increment the scan count
-        const newReportsCount = user.reports + 1;
-    
-        // Update the scan count in the database
-        const { error: updateError } = await supabase
-          .from('users')
-          .update({ reports: newReportsCount })
-          .eq('id', userId);
-    
-        if (updateError) {
-          console.log('Error updating reports count: ', updateError);
-        }
-        console.log('Reports count incremented successfully');
-    } catch (err) {
-        console.log('Error incrementing report count:', err);
-    }
-}
 
 // Function to send email
 const sendEmailReport = async (req, res) => {
@@ -196,8 +160,6 @@ const sendEmailReport = async (req, res) => {
       subject: 'Your HealthLens Health Report',
       html: emailTemplate,
     });
-
-    incrementReportsCount(user.userId); // Increment the reports count
 
     if (error) {
       return res.status(500).json({ message: 'Failed to send email', error });
