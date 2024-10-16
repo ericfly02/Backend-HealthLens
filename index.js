@@ -7,8 +7,8 @@ const path = require('path');
 // CORS configuration
 const corsOptions = {
     origin: 'https://www.healthlens.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Add 'OPTIONS'
-    allowedHeaders: ['Content-Type', 'Authorization'], // Add allowed headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], 
+    allowedHeaders: ['Content-Type', 'Authorization'], 
     credentials: true
 };
 
