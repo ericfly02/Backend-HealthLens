@@ -10,7 +10,7 @@ const sendEmailReport = async (req, res) => {
   const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
   try {
     const user = req.user; // Assuming user is added to req in the middleware
-    const { name, last_name, email, username, height, weight, sex, totalScans, diseases } = req.body;
+    const { name, last_name, email, username, height, weight, sex, scans, diseases } = req.body;
     console.log('req.body:', req.body);
     const diseasesList = Array.isArray(diseases) ? diseases : JSON.parse(diseases);
 
@@ -92,7 +92,7 @@ const sendEmailReport = async (req, res) => {
                                 <p style="font-size: 16px; margin: 0;">Total Scans</p>
                             </td>
                             <td style="padding: 10px 0; border-bottom: 1px solid #f5f3ff; text-align: right;">
-                                <p style="font-size: 16px; margin: 0;">${totalScans}</p>
+                                <p style="font-size: 16px; margin: 0;">${scans}</p>
                             </td>
                         </tr>
                         <tr>
@@ -127,7 +127,7 @@ const sendEmailReport = async (req, res) => {
                     </div>
 
                     <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-                        <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Symptoms</h3>
+                        <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Scan Results</h3>
                         <ul style="padding: 0 0 0 20px; margin: 0;">
                             ${diseasesHtml}
                         </ul>
