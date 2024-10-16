@@ -88,19 +88,6 @@ const sendEmailReport = async (req, res) => {
                         </tr>
                     </table>
 
-                    <table cellpadding="0" cellspacing="0" style="width: 100%; margin-bottom: 30px;">
-                        <tr>
-                            <td style="width: 50%;">
-                                <p style="font-size: 14px; color: #6366f1; margin: 0 0 5px 0;">REPORT ID</p>
-                                <p style="font-size: 14px; margin: 0;">HLA1B2C3D4</p>
-                            </td>
-                            <td style="width: 50%;">
-                                <p style="font-size: 14px; color: #6366f1; margin: 0 0 5px 0;">DOCUMENT NO.</p>
-                                <p style="font-size: 14px; margin: 0;">123456789</p>
-                            </td>
-                        </tr>
-                    </table>
-
                     <h2 style="font-size: 18px; margin-bottom: 20px; color: #4338ca;">Health Summary</h2>
 
                     <table cellpadding="0" cellspacing="0" style="width: 100%; margin-bottom: 30px;">
@@ -140,36 +127,14 @@ const sendEmailReport = async (req, res) => {
 
                     <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
                         <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Your Daily Health Tip</h3>
-                        <p style="font-size: 16px; margin: 0;">"Get 7-9 hours of sleep for better overall health."</p>
+                        <p style="font-size: 16px; margin: 0;">${randomTip}</p>
                     </div>
 
                     <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
                         <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Symptoms</h3>
-                        <ul class="symptoms-list" style="padding: 0 0 0 20px; margin: 0;">
-                            <div>
-                                <script>
-                                    // Function to add diseases to the HTML
-                                    function addDiseasesToHTML(${diseases}) {
-                                        // Select the <ul> element where diseases will be added
-                                        const symptomsList = document.querySelector('.symptoms-list');
-                                        
-                                        // Clear existing items if necessary (optional)
-                                        symptomsList.innerHTML = ''; // Uncomment if you want to clear existing items
-
-                                        // Iterate over the diseases array and create list items
-                                        ${diseases}.forEach(${diseases} => {
-                                            const listItem = document.createElement('li');
-                                            listItem.textContent = ${diseases}; // Set the text content of the list item
-                                            listItem.style.fontSize = '16px'; // Apply styles
-                                            listItem.style.marginBottom = '5px'; // Apply styles
-                                            symptomsList.appendChild(listItem); // Append the new list item to the <ul>
-                                        });
-                                    }
-
-                                    // Call the function to add diseases
-                                    addDiseasesToHTML(${diseases});
-                                </script>
-                            </div>
+                        <ul style="padding: 0 0 0 20px; margin: 0;">
+                            <li style="font-size: 16px; margin-bottom: 5px;">Headache</li>
+                            <li style="font-size: 16px; margin-bottom: 5px;">Fatigue</li>
                         </ul>
                     </div>
 
