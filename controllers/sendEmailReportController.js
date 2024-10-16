@@ -35,16 +35,6 @@ const sendEmailReport = async (req, res) => {
       
     const randomTip = healthTips[Math.floor(Math.random() * healthTips.length)];
 
-    const recentSymptomsList = document.querySelector('.recent-symptoms-div ul'); // Replace with the actual selector for your unordered list
-
-    diseases.forEach(disease => {
-        const diseaseLi = document.createElement('li');
-        diseaseLi.textContent = disease;
-        diseaseLi.style.fontSize = '16px';
-        diseaseLi.style.marginBottom = '5px';
-        recentSymptomsList.appendChild(diseaseLi);
-    });
-
     // Import your email template here (could be generated or a pre-built string)
     const emailTemplate = `
     <!DOCTYPE html>
@@ -133,8 +123,10 @@ const sendEmailReport = async (req, res) => {
                     </div>
 
                     <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-                    <h3>Recent Symptoms</h3>
-                    <ul style="padding: 0 0 0 20px; margin: 0;">
+                        <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Symptoms</h3>
+                        <ul style="padding: 0 0 0 20px; margin: 0;">
+                            <li style="font-size: 16px; margin-bottom: 5px;">${diseases[0]}</li>
+                            <li style="font-size: 16px; margin-bottom: 5px;">Fatigue</li>
                         </ul>
                     </div>
 
