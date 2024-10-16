@@ -195,7 +195,7 @@ const sendEmailReport = async (req, res) => {
       subject: 'Your HealthLens Health Report',
       html: emailTemplate,
     });
-    console.log('email:', email);
+    console.log('user:', user);   
     incrementReportsCount(user.id); // Increment the reports count
 
     if (error) {
