@@ -11,7 +11,7 @@ const sendEmailReport = async (req, res) => {
   console.log('Sending email report');
   try {
     const user = req.user; // Assuming user is added to req in the middleware
-    const { firstName, lastName, email, username, height, weight, sex, totalScans, chatHistory, diseases } = req.body;
+    const { firstName, lastName, email, username, height, weight, sex, totalScans, recentSymptoms, chatHistory, diseases } = req.body;
 
     // Generate a personalized health tip
     const healthTips = [
@@ -143,14 +143,21 @@ const sendEmailReport = async (req, res) => {
                         <p style="font-size: 16px; margin: 0;">"Get 7-9 hours of sleep for better overall health."</p>
                     </div>
 
-                    <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-                        <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Diseases</h3>
-                        <ul style="padding: 0 0 0 20px; margin: 0;">
-                            ${diseases.map(disease => `
-                                <li style="font-size: 16px; margin-bottom: 5px;">${disease}</li>
-                            `).join('')}
+                    <div style={{ backgroundColor: '#f5f3ff', borderRadius: '8px', padding: '20px', marginBottom: '30px' }}>
+                        <h3 style={{ color: '#4338ca', fontSize: '18px', margin: '0 0 10px 0' }}>Recent Symptoms</h3>
+                        <ul style={{ padding: '0 0 0 20px', margin: '0' }}>
+                            ${diseases && diseases.length > 0 ? (
+                                diseases.map((item, index) => (
+                                    <li key={index} style={{ fontSize: '16px', marginBottom: '5px' }}>
+                                        {item}
+                                    </li>
+                                ))
+                            ) : (
+                                <li style={{ fontSize: '16px', marginBottom: '5px' }}>No recent symptoms reported</li>
+                            )}
                         </ul>
                     </div>
+
 
                     <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
                         <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Chat History</h3>
