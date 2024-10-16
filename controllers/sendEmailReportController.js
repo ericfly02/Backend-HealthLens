@@ -15,7 +15,7 @@ const incrementReportsCount = async (userId) => {
           .single();
     
         if (fetchError) {
-          return res.status(400).json({ message: 'Error fetching user data', fetchError });
+          console.log('Error fetching user data', fetchError);
         }
     
         // Increment the scan count
@@ -28,13 +28,11 @@ const incrementReportsCount = async (userId) => {
           .eq('id', userId);
     
         if (updateError) {
-          return res.status(400).json({ message: 'Error updating reports count', updateError });
+          console.log('Error updating reports count: ', updateError);
         }
-    
-        res.status(200).json({ message: 'Reports count incremented successfully' });
+        console.log('Reports count incremented successfully');
     } catch (err) {
-    console.error('Error incrementing report count:', err);
-    res.status(500).json({ message: 'Internal server error' });
+        console.log('Error incrementing report count:', err);
     }
 }
 
