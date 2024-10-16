@@ -6,6 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // Function to increment the reports count
 const incrementReportsCount = async (userId) => {
     try {
+        console.log('Incrementing reports count for user:', userId);
         // Fetch the current scan count
         const { data: user, error: fetchError } = await supabase
           .from('users')
@@ -45,7 +46,7 @@ const sendEmailReport = async (req, res) => {
   try {
     const user = req.user; // Assuming user is added to req in the middleware
     const { firstName, lastName, email, username, height, weight, sex, totalScans, recentSymptoms, chatHistory, diseases } = req.body;
-
+    console.log('diseases:', diseases);
     const diseasesList = Array.isArray(diseases) ? diseases : JSON.parse(diseases);
 
     // Generate a personalized health tip
@@ -194,7 +195,7 @@ const sendEmailReport = async (req, res) => {
       subject: 'Your HealthLens Health Report',
       html: emailTemplate,
     });
-
+    console.log('email:', email);
     incrementReportsCount(user.id); // Increment the reports count
 
     if (error) {
