@@ -15,35 +15,17 @@ const assistant = new AssistantV2({
 exports.startConversation = async (req, res) => {
     const { sessionId, disease, message } = req.body;
 
-    console.log('Request body:', req.body);
-    console.log('Disease:', disease);
-    console.log('Session ID:', sessionId);
-    
-    // Make a credentials console log to check if the credentials are correct
-    console.log("WATSON_ASSISTANT_VERSION: ", process.env.WATSON_ASSISTANT_VERSION);
-    console.log("WATSON_API_KEY: ", process.env.WATSON_API_KEY);
-    console.log("WATSON_URL: ", process.env.WATSON_URL);
-    console.log("WATSON_ASSISTANT_ID: ", process.env.WATSON_ASSISTANT_ID);
-    console.log("WATSON_URL: ", process.env.WATSON_URL);
-
     try {
         let session;
         if (!sessionId) {
         const sessionResponse = await assistant.createSession({
             assistantId: process.env.WATSON_ASSISTANT_ID,
         });
-        console.log('Watson Assistant response:', sessionResponse);
         session = sessionResponse.result.session_id;
-        console.log('New session created:', session);
         } else {
         session = sessionId;
-        console.log('Existing session used:', session);
         }
 
-        console.log('Session ID:', session);
-
-        // Send disease message to Watson Assistant
-        console.log('Sending disease to Watson Assistant:', disease);
         const messageResponse = await assistant.message({
         assistantId: process.env.WATSON_ASSISTANT_ID,
         sessionId: session,
@@ -52,8 +34,6 @@ exports.startConversation = async (req, res) => {
             'text': `${message}`,
         },
         });
-
-        console.log('Watson Assistant response:', messageResponse.result.output.generic.map(item => item.text));
 
         res.json({
         sessionId: session,

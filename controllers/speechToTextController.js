@@ -16,8 +16,6 @@ const speechToTextService = new SpeechToTextV1({
 
 const speechToText = async (req, res) => {
   try {
-    console.log('File received:', req.file); // Check if file is received
-    console.log('File MIME type:', req.file.mimetype);
 
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -31,7 +29,6 @@ const speechToText = async (req, res) => {
       ffmpeg(audioFilePath)
         .toFormat('wav')
         .on('end', () => {
-          console.log('Audio conversion completed successfully');
           resolve();
         })
         .on('error', (err) => {
@@ -42,7 +39,6 @@ const speechToText = async (req, res) => {
     });
 
     const audioStream = fs.createReadStream(convertedAudioPath);
-    console.log('Processing file:', convertedAudioPath);
 
     const params = {
       audio: audioStream,
@@ -57,8 +53,6 @@ const speechToText = async (req, res) => {
     // Clean up: delete the original and converted files after processing
     fs.unlinkSync(audioFilePath);
     fs.unlinkSync(convertedAudioPath);
-
-    console.log('Transcription:', transcript);
 
     res.json({ transcription: transcript });
   } catch (error) {

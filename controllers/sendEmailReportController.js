@@ -8,15 +8,11 @@ const sendEmailReport = async (req, res) => {
   // get today's date
   const today = new Date();
   const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-  console.log('Sending email report');
   try {
     const user = req.user; // Assuming user is added to req in the middleware
     const { firstName, lastName, email, username, height, weight, sex, totalScans, recentSymptoms, chatHistory, diseases } = req.body;
 
-    console.log('diseases:', diseases);
     const diseasesList = Array.isArray(diseases) ? diseases : JSON.parse(diseases);
-
-    console.log('diseasesList:', user);
 
     // Generate a personalized health tip
     const healthTips = [
@@ -132,14 +128,6 @@ const sendEmailReport = async (req, res) => {
 
                     <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
                         <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Recent Symptoms</h3>
-                        <ul style="padding: 0 0 0 20px; margin: 0;">
-                            <li style="font-size: 16px; margin-bottom: 5px;">tt</li>
-                            <li style="font-size: 16px; margin-bottom: 5px;">Fatigue</li>
-                        </ul>
-                    </div>
-
-                    <div style="background-color: #f5f3ff; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-                        <h3 style="color: #4338ca; font-size: 18px; margin: 0 0 10px 0;">Diseases</h3>
                         <ul style="padding: 0 0 0 20px; margin: 0;">
                             ${diseasesHtml}
                         </ul>

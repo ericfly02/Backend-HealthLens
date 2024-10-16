@@ -43,17 +43,11 @@ exports.signup = async (req, res) => {
         .single();    // Ensure it returns a single row
     
 
-      // Log the entire Supabase response
-      console.log('Supabase insert response:', { data: newUser, error: error });
- 
       // Check if insert had an error
       if (error) {
         console.error('Error creating user:', error);  // Debugging
         return res.status(500).json({ error: 'Error creating user' });
       }
-
-      // Log the newly created user object
-      console.log('newUser:', newUser);
       
       // Generate a JWT token
       const token = jwt.sign({ userId: newUser.id }, process.env.JWT_SECRET);

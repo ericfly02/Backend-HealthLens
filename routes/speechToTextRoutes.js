@@ -24,9 +24,6 @@ const fs = require('fs');
 router.post('/speech-to-text', upload.single('audio'), async (req, res) => {
   const audioFile = req.file;
 
-  console.log('Audio buffer size:', audioFile.buffer.length);
-
-
   if (!audioFile) {
     return res.status(400).send('No audio file uploaded');
   }
@@ -41,18 +38,13 @@ router.post('/speech-to-text', upload.single('audio'), async (req, res) => {
     .toFormat('s16le')  // PCM format
     .on('end', async () => {
       try {
-        const pcmBuffer = fs.readFileSync(outputPath);
-        console.log('PCM Buffer size:', pcmBuffer.length);
-        
+        const pcmBuffer = fs.readFileSync(outputPath);       
 
         const response = await speechToText.recognize({
             audio: pcmBuffer,
             contentType: 'audio/l16; rate=16000',
           });
           
-
-        console.log('Transcription:', response.result.results);
-
         const transcription = response.result.results
           .map(r => r.alternatives[0].transcript)
           .join('\n');
