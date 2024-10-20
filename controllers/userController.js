@@ -2,7 +2,6 @@
 const userModel = require('../models/userModel');
 const { supabase } = require('../controllers/supabaseClient');
 
-
 // Function to get user details by ID
 exports.getUserInfo = async (req, res) => {
   try {

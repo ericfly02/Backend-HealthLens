@@ -19,6 +19,4 @@ router.post('/add-disease', authMiddleware, userController.addDiseaseToUser);
 
 router.post('/increment-reports', authMiddleware, userController.incrementReports);
 
-
-
 module.exports = router;
