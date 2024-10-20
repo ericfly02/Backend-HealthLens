@@ -5,6 +5,8 @@ const fs = require('fs');
 const processAudio = async (req, res) => {
   try {
     // Get the audio file from the request
+    console.log('req.file:', req.file);
+    console.log('req --> ', req); 
     const audioFile = req.file;
 
     if (!audioFile) {
