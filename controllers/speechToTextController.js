@@ -3,6 +3,8 @@ const { p } = require('framer-motion/client');
 const fs = require('fs');
 
 const processAudio = async (req, res) => {
+  console.log('API URL:', process.env.IBM_API_KEY_SPEECH_TO_TEXT);
+  console.log('API Key:', process.env.IBM_API_URL_SPEECH_TO_TEXT);
   try {
     // Get the audio file from the request
     console.log('req.file:', req.file);
