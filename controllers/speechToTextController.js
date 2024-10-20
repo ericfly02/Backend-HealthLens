@@ -15,6 +15,14 @@ const processAudio = async (req, res) => {
     const apiKey = process.env.IBM_API_KEY_SPEECH_TO_TEXT;
     const url = process.env.IBM_API_URL_SPEECH_TO_TEXT;
 
+    // Log the environment variables
+    console.log('API URL:', url);
+    console.log('API Key:', apiKey);
+
+    if (!url || !apiKey) {
+      return res.status(500).json({ error: 'IBM API credentials missing' });
+    }
+
     // Send the audio file to IBM's Speech to Text API
     const response = await axios.post(url, audioFile.buffer, {
       headers: {
@@ -41,5 +49,6 @@ const processAudio = async (req, res) => {
     return res.status(500).json({ error: 'Failed to process audio file' });
   }
 };
+
 
 module.exports = { processAudio };
