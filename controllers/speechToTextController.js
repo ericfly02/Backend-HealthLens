@@ -1,48 +1,32 @@
-const axios = require('axios');
-const { p } = require('framer-motion/client');
-const fs = require('fs');
+const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
+const { IamAuthenticator } = require('ibm-watson/auth');
+
+const speechToText = new SpeechToTextV1({
+  authenticator: new IamAuthenticator({
+    apikey: process.env.IBM_API_KEY_SPEECH_TO_TEXT,  // From your environment variables
+  }),
+  serviceUrl: process.env.IBM_API_URL_SPEECH_TO_TEXT,  // From your environment variables
+});
 
 const processAudio = async (req, res) => {
-  console.log('API URL:', process.env.IBM_API_KEY_SPEECH_TO_TEXT);
-  console.log('API Key:', process.env.IBM_API_URL_SPEECH_TO_TEXT);
   try {
-    // Get the audio file from the request
-    console.log('req.file:', req.file);
-    console.log('req --> ', req); 
-    const audioFile = req.file;
-
-    if (!audioFile) {
+    // Ensure an audio file is provided
+    if (!req.file) {
       return res.status(400).json({ error: 'No audio file uploaded' });
     }
 
-    // IBM Watson Speech to Text API credentials
-    const apiKey = process.env.IBM_API_KEY_SPEECH_TO_TEXT;
-    const url = process.env.IBM_API_URL_SPEECH_TO_TEXT;
+    // Set up parameters for the speech-to-text service
+    const recognizeParams = {
+      audio: req.file.buffer,  // The uploaded audio file
+      contentType: 'audio/wav',  // Adjust based on your audio format
+      model: 'en-US_BroadbandModel',  // Adjust model based on your needs
+    };
 
-    // Log the environment variables
-    console.log('API URL:', url);
-    console.log('API Key:', apiKey);
+    // Call IBM Watson Speech to Text service
+    const response = await speechToText.recognize(recognizeParams);
 
-    if (!url || !apiKey) {
-      return res.status(500).json({ error: 'IBM API credentials missing' });
-    }
-
-    // Send the audio file to IBM's Speech to Text API
-    const response = await axios.post(url, audioFile.buffer, {
-      headers: {
-        'Content-Type': 'audio/wav',
-      },
-      params: {
-        model: 'en-US_BroadbandModel', // You can choose a different language model if needed
-      },
-      auth: {
-        username: 'apikey',
-        password: apiKey,
-      }
-    });
-
-    // Get the transcription from IBM's response
-    const transcription = response.data.results[0].alternatives[0].transcript;
+    // Extract transcription from the response
+    const transcription = response.result.results[0].alternatives[0].transcript;
     console.log('Transcription:', transcription);
 
     // Send the transcription back to the frontend
@@ -53,6 +37,5 @@ const processAudio = async (req, res) => {
     return res.status(500).json({ error: 'Failed to process audio file' });
   }
 };
-
 
 module.exports = { processAudio };
