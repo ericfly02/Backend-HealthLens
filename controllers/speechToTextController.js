@@ -40,7 +40,6 @@ const processAudio = async (req, res) => {
       audio: audioStream,
       contentType: 'audio/wav', // Ensure correct content type
       model: 'en-US_BroadbandModel', // Specify the model
-      interimResults: false, // Set to true if you want interim results
     };
 
     const transcription = await speechToText.recognize(params);

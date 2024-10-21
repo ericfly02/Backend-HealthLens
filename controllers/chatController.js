@@ -18,12 +18,12 @@ exports.startConversation = async (req, res) => {
     try {
         let session;
         if (!sessionId) {
-        const sessionResponse = await assistant.createSession({
-            assistantId: process.env.WATSON_ASSISTANT_ID,
-        });
-        session = sessionResponse.result.session_id;
-        } else {
-        session = sessionId;
+            const sessionResponse = await assistant.createSession({
+                assistantId: process.env.WATSON_ASSISTANT_ID,
+            });
+            session = sessionResponse.result.session_id;
+            } else {
+            session = sessionId;
         }
 
         const messageResponse = await assistant.message({
@@ -36,8 +36,8 @@ exports.startConversation = async (req, res) => {
         });
 
         res.json({
-        sessionId: session,
-        watsonResponse: messageResponse.result.output.generic.map(item => item.text),
+            sessionId: session,
+            watsonResponse: messageResponse.result.output.generic.map(item => item.text),
         });
     } catch (error) {
         console.error('Error during interaction with Watson Assistant:', error);
