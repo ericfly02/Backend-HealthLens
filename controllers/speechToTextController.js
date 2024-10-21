@@ -1,11 +1,12 @@
 const { IamAuthenticator } = require('ibm-watson/auth');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 
+// Initialize the IBM Speech to Text service
 const speechToText = new SpeechToTextV1({
   authenticator: new IamAuthenticator({
-    apikey: process.env.IBM_SPEECH_TO_TEXT_API_KEY,
+    apikey: process.env.IBM_SPEECH_TO_TEXT_API_KEY, // Check if API key is being read correctly
   }),
-  serviceUrl: process.env.IBM_SPEECH_TO_TEXT_URL,
+  serviceUrl: process.env.IBM_SPEECH_TO_TEXT_URL,   // Check if URL is being read correctly
 });
 
 const processAudio = async (req, res) => {
