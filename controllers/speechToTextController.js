@@ -4,28 +4,31 @@ const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 // Initialize the IBM Speech to Text service
 const speechToText = new SpeechToTextV1({
   authenticator: new IamAuthenticator({
-    apikey: process.env.IBM_SPEECH_TO_TEXT_API_KEY, // Check if API key is being read correctly
+    apikey: process.env.IBM_SPEECH_TO_TEXT_API_KEY,
   }),
-  serviceUrl: process.env.IBM_SPEECH_TO_TEXT_URL,   // Check if URL is being read correctly
+  serviceUrl: process.env.IBM_SPEECH_TO_TEXT_URL,
 });
 
 const processAudio = async (req, res) => {
   try {
-
     console.log("API KEY: ", process.env.IBM_SPEECH_TO_TEXT_API_KEY);
     console.log("URL: ", process.env.IBM_SPEECH_TO_TEXT_URL);
 
-    console.log('Processing audio file:', req.file.originalname);
-    console.log('File size:', req.file.size);
-    console.log('File buffer:', req.file.buffer);
-
-    if (!req.file || req.file.size === 0) {
-      return res.status(400).json({ error: 'Audio file is required and cannot be empty.' });
+    // Check if file is uploaded
+    if (!req.file) {
+      console.error('No file uploaded');
+      return res.status(400).json({ error: 'Audio file is required.' });
     }
 
+    // Log details about the uploaded file
     console.log('Processing audio file:', req.file.originalname);
     console.log('File size:', req.file.size);
-    console.log('File buffer:', req.file.buffer);
+    console.log('File buffer:', req.file.buffer.length); // Log buffer length instead of the buffer itself
+
+    // Check for empty audio buffer
+    if (req.file.size === 0 || req.file.buffer.length === 0) {
+      return res.status(400).json({ error: 'Audio file cannot be empty.' });
+    }
 
     const audioStream = req.file.buffer; // Get the audio buffer
     const params = {
