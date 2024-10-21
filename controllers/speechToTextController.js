@@ -14,6 +14,10 @@ const processAudio = async (req, res) => {
       return res.status(400).json({ error: 'Audio file is required and cannot be empty.' });
     }
 
+    console.log('Processing audio file:', req.file.originalname);
+    console.log('File size:', req.file.size);
+    console.log('File buffer:', req.file.buffer);
+
     const audioStream = req.file.buffer; // Get the audio buffer
     const params = {
       audio: audioStream,
