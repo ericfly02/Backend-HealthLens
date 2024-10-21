@@ -11,6 +11,14 @@ const speechToText = new SpeechToTextV1({
 
 const processAudio = async (req, res) => {
   try {
+
+    console.log("API KEY: ", process.env.IBM_SPEECH_TO_TEXT_API_KEY);
+    console.log("URL: ", process.env.IBM_SPEECH_TO_TEXT_URL);
+
+    console.log('Processing audio file:', req.file.originalname);
+    console.log('File size:', req.file.size);
+    console.log('File buffer:', req.file.buffer);
+
     if (!req.file || req.file.size === 0) {
       return res.status(400).json({ error: 'Audio file is required and cannot be empty.' });
     }
