@@ -1,5 +1,6 @@
 const { IamAuthenticator } = require('ibm-watson/auth');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
+const { Readable } = require('stream');
 
 // Initialize the IBM Speech to Text service
 const speechToText = new SpeechToTextV1({
@@ -23,18 +24,23 @@ const processAudio = async (req, res) => {
     // Log details about the uploaded file
     console.log('Processing audio file:', req.file.originalname);
     console.log('File size:', req.file.size);
-    console.log('File buffer:', req.file.buffer.length); // Log buffer length instead of the buffer itself
+    console.log('File buffer length:', req.file.buffer.length); // Log buffer length instead of the buffer itself
 
     // Check for empty audio buffer
     if (req.file.size === 0 || req.file.buffer.length === 0) {
       return res.status(400).json({ error: 'Audio file cannot be empty.' });
     }
 
-    const audioStream = req.file.buffer; // Get the audio buffer
+    // Create a readable stream from the audio buffer
+    const audioStream = new Readable();
+    audioStream.push(req.file.buffer);
+    audioStream.push(null); // Signal the end of the stream
+
     const params = {
       audio: audioStream,
       contentType: 'audio/wav', // Ensure correct content type
       model: 'en-US_BroadbandModel', // Specify the model
+      interimResults: false, // Set to true if you want interim results
     };
 
     const transcription = await speechToText.recognize(params);
