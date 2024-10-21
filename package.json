@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.10",
     "@supabase/supabase-js": "^2.45.4",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",

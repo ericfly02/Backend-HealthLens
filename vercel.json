@@ -16,6 +16,9 @@
         },
         "dest": "/index.js"
       }
-    ]
+    ],
+    "env": {
+      "FFMPEG_PATH": "node_modules/ffmpeg-static/ffmpeg"
+    }
   }
   

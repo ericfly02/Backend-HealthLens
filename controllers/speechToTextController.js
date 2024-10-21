@@ -1,6 +1,8 @@
 const ffmpegPath = require('ffmpeg-static');
 const ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfmpegPath(process.env.FFMPEG_PATH || ffmpegPath);
+
+console.log('ffmpeg path:', ffmpegPath);
 
 const { IamAuthenticator } = require('ibm-watson/auth');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
