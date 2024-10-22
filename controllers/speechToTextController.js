@@ -1,6 +1,8 @@
 const { IamAuthenticator } = require('ibm-watson/auth');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
+const ffmpeg = require('fluent-ffmpeg');
 const { Readable } = require('stream');
+const fs = require('fs');
 
 // Initialize the IBM Speech to Text service
 const speechToText = new SpeechToTextV1({
@@ -12,40 +14,45 @@ const speechToText = new SpeechToTextV1({
 
 const processAudio = async (req, res) => {
   try {
-    console.log("API KEY: ", process.env.IBM_SPEECH_TO_TEXT_API_KEY);
-    console.log("URL: ", process.env.IBM_SPEECH_TO_TEXT_URL);
-
-    // Check if file is uploaded
     if (!req.file) {
-      console.error('No file uploaded');
       return res.status(400).json({ error: 'Audio file is required.' });
     }
 
-    // Log details about the uploaded file
     console.log('Processing audio file:', req.file.originalname);
-    console.log('File size:', req.file.size);
-    console.log('File buffer length:', req.file.buffer.length); // Log buffer length instead of the buffer itself
 
-    // Check for empty audio buffer
-    if (req.file.size === 0 || req.file.buffer.length === 0) {
-      return res.status(400).json({ error: 'Audio file cannot be empty.' });
-    }
+    // Convert audio to the required format (L16 PCM)
+    const outputPath = '/tmp/output.pcm'; // Temporary storage for converted file
+    ffmpeg()
+      .input(Readable.from(req.file.buffer))
+      .output(outputPath)
+      .audioCodec('pcm_s16le')
+      .audioChannels(1)
+      .audioFrequency(16000)
+      .format('s16le')
+      .on('end', async () => {
+        console.log('Audio converted to L16 PCM format.');
 
-    // Create a readable stream from the audio buffer
-    const audioStream = new Readable();
-    audioStream.push(req.file.buffer);
-    audioStream.push(null); // Signal the end of the stream
+        const audioStream = fs.createReadStream(outputPath);
 
-    const params = {
-      audio: audioStream,
-      contentType: 'audio/wav', // Ensure correct content type
-      model: 'en-US_BroadbandModel', // Specify the model
-    };
+        const params = {
+          audio: audioStream,
+          contentType: 'audio/l16; rate=16000', // L16 format with 16000Hz sample rate
+          model: 'en-US_BroadbandModel',
+        };
 
-    const transcription = await speechToText.recognize(params);
-    res.json({
-      transcription: transcription.result.results[0].alternatives[0].transcript,
-    });
+        const transcription = await speechToText.recognize(params);
+        res.json({
+          transcription: transcription.result.results[0].alternatives[0].transcript,
+        });
+
+        // Clean up the temporary file
+        fs.unlinkSync(outputPath);
+      })
+      .on('error', (err) => {
+        console.error('Error converting audio:', err);
+        res.status(500).json({ error: 'Audio conversion failed.' });
+      })
+      .run();
   } catch (error) {
     console.error('Error processing audio file:', error);
     res.status(500).json({ error: error.message });
