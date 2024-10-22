@@ -1,13 +1,6 @@
-const ffmpegPath = require('ffmpeg-static');
-const ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(process.env.FFMPEG_PATH || ffmpegPath);
-
-console.log('ffmpeg path:', ffmpegPath);
-
 const { IamAuthenticator } = require('ibm-watson/auth');
 const SpeechToTextV1 = require('ibm-watson/speech-to-text/v1');
 const { Readable } = require('stream');
-const fs = require('fs');
 
 // Initialize the IBM Speech to Text service
 const speechToText = new SpeechToTextV1({
@@ -19,6 +12,9 @@ const speechToText = new SpeechToTextV1({
 
 const processAudio = async (req, res) => {
   try {
+    console.log("API KEY: ", process.env.IBM_SPEECH_TO_TEXT_API_KEY);
+    console.log("URL: ", process.env.IBM_SPEECH_TO_TEXT_URL);
+
     // Check if file is uploaded
     if (!req.file) {
       console.error('No file uploaded');
@@ -27,44 +23,29 @@ const processAudio = async (req, res) => {
 
     // Log details about the uploaded file
     console.log('Processing audio file:', req.file.originalname);
-    
+    console.log('File size:', req.file.size);
+    console.log('File buffer length:', req.file.buffer.length); // Log buffer length instead of the buffer itself
+
+    // Check for empty audio buffer
+    if (req.file.size === 0 || req.file.buffer.length === 0) {
+      return res.status(400).json({ error: 'Audio file cannot be empty.' });
+    }
+
+    // Create a readable stream from the audio buffer
     const audioStream = new Readable();
     audioStream.push(req.file.buffer);
     audioStream.push(null); // Signal the end of the stream
 
-    // Convert the audio buffer to L16 (PCM)
-    const tempOutputPath = '/tmp/converted_audio.wav'; // Temporary path for converted audio
+    const params = {
+      audio: audioStream,
+      contentType: 'audio/wav', // Ensure correct content type
+      model: 'en-US_BroadbandModel', // Specify the model
+    };
 
-    ffmpeg(audioStream)
-      .inputFormat('wav')
-      .audioCodec('pcm_s16le')
-      .audioChannels(1)
-      .audioFrequency(16000)
-      .format('wav')
-      .on('end', async () => {
-        const convertedAudio = fs.createReadStream(tempOutputPath);
-
-        const params = {
-          audio: convertedAudio,
-          contentType: 'audio/l16; rate=16000',
-          model: 'en-US_BroadbandModel',
-        };
-
-        try {
-          const transcription = await speechToText.recognize(params);
-          res.json({
-            transcription: transcription.result.results[0].alternatives[0].transcript,
-          });
-        } catch (err) {
-          console.error('Error with IBM Speech-to-Text:', err);
-          res.status(500).json({ error: 'Error with transcription' });
-        }
-      })
-      .on('error', (err) => {
-        console.error('Error converting audio:', err);
-        res.status(500).json({ error: 'Error converting audio' });
-      })
-      .save(tempOutputPath); // Save the converted audio
+    const transcription = await speechToText.recognize(params);
+    res.json({
+      transcription: transcription.result.results[0].alternatives[0].transcript,
+    });
   } catch (error) {
     console.error('Error processing audio file:', error);
     res.status(500).json({ error: error.message });
