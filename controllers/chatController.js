@@ -1,3 +1,4 @@
+// chatController.js
 const axios = require('axios');
 
 // Constants
@@ -8,7 +9,6 @@ const API_KEY = process.env.WATSON_API_KEY;
 // Function to get IAM token
 async function getIAMToken() {
   console.log('Attempting to get IAM token with API key:', API_KEY);
-  
   try {
     const response = await axios.post(IAM_URL, 
       `grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=${API_KEY}`, 
@@ -32,8 +32,8 @@ async function getIAMToken() {
   }
 }
 
-// Route handler to interact with Watson API
-exports.postMessage = async (req, res) => {
+// Rename the function to match the reference in the routes file
+exports.startConversation = async (req, res) => {
   try {
     const { message } = req.body;
     console.log('Received message:', message);
@@ -44,7 +44,7 @@ exports.postMessage = async (req, res) => {
 
     // Prepare body for the Watson API request
     const body = {
-      input: `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. \nYour answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n${message}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`,
+      input: `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful, respectful and honest assistant...`,
       parameters: {
         decoding_method: "greedy",
         max_new_tokens: 3,
