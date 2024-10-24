@@ -44,17 +44,18 @@ exports.startConversation = async (req, res) => {
 
     // Prepare body for the Watson API request
     const body = {
-      input: `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful, respectful and honest assistant...`,
-      parameters: {
-        decoding_method: "greedy",
-        max_new_tokens: 3,
-        min_new_tokens: 0,
-        stop_sequences: [],
-        repetition_penalty: 1
-      },
-      model_id: process.env.WATSON_MODEL_ID,
-      project_id: process.env.WATSON_PROJECT_ID
-    };
+        input: `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. \nYour answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n${message}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`,
+        parameters: {
+          decoding_method: "greedy",
+          max_new_tokens: 3,
+          min_new_tokens: 0,
+          stop_sequences: [],
+          repetition_penalty: 1
+        },
+        model_id: "meta-llama/llama-3-2-3b-instruct",
+        project_id: "d5428963-a688-4d05-b9b8-410d3a879e78"
+      };
+  
 
     // Make the request to the Watson API
     console.log('Making request to Watson API...');
