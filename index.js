@@ -6,10 +6,10 @@ const path = require('path');
 
 // CORS configuration
 const corsOptions = {
-    origin: 'https://www.healthlens.app', // Allow only your frontend
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], 
+    allowedHeaders: ['Content-Type', 'Authorization'], 
+    credentials: true
 };
 
 
