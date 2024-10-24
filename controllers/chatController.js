@@ -47,7 +47,7 @@ exports.startConversation = async (req, res) => {
         input: `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. \nYour answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n${message}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`,
         parameters: {
           decoding_method: "greedy",
-          max_new_tokens: 3,
+          max_new_tokens: 100,
           min_new_tokens: 0,
           stop_sequences: [],
           repetition_penalty: 1
