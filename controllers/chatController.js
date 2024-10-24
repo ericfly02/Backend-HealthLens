@@ -79,6 +79,7 @@ exports.startConversation = async (req, res) => {
     // Return the response from Watson API
     const data = response.data;
     console.log('Watson API Response:', data);
+    console.log('Generated text:', data.results[0].generated_text);
     res.json({ response: data.results[0].generated_text });
 
   } catch (error) {
