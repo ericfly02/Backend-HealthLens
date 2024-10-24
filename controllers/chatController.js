@@ -8,7 +8,6 @@ const API_KEY = process.env.WATSON_API_KEY;
 
 // Function to get IAM token
 async function getIAMToken() {
-  console.log('Attempting to get IAM token with API key:', API_KEY);
   try {
     const response = await axios.post(IAM_URL, 
       `grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=${API_KEY}`, 
@@ -24,7 +23,6 @@ async function getIAMToken() {
       throw new Error('Failed to get IAM token');
     }
 
-    console.log('Successfully got IAM token');
     return response.data.access_token;
   } catch (error) {
     console.error('Error fetching IAM token:', error.message);
@@ -36,11 +34,9 @@ async function getIAMToken() {
 exports.startConversation = async (req, res) => {
   try {
     const { message } = req.body;
-    console.log('Received message:', message);
 
     // Get IAM token
     const accessToken = await getIAMToken();
-    console.log('Access token obtained:', accessToken ? 'Yes' : 'No');
 
     // Prepare body for the Watson API request
     const body = {
@@ -58,7 +54,6 @@ exports.startConversation = async (req, res) => {
   
 
     // Make the request to the Watson API
-    console.log('Making request to Watson API...');
     const response = await axios.post(API_URL, body, {
       headers: {
         'Accept': 'application/json',
@@ -78,8 +73,6 @@ exports.startConversation = async (req, res) => {
 
     // Return the response from Watson API
     const data = response.data;
-    console.log('Watson API Response:', data);
-    console.log('Generated text:', data.results[0].generated_text);
     res.json({ response: data.results[0].generated_text });
 
   } catch (error) {

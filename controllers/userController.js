@@ -23,8 +23,6 @@ exports.getUserInfo = async (req, res) => {
 exports.updateUser = async (req, res) => {
     const { name, last_name, email, username, height, weight, sex } = req.body;
     const userId = req.user.userId;  
-
-    console.log('req.body:', req.body);
   
     try {
       const { data, error } = await supabase
