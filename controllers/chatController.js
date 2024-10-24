@@ -1,46 +1,91 @@
 const axios = require('axios');
-const AssistantV2 = require('ibm-watson/assistant/v2');
-const { IamAuthenticator } = require('ibm-watson/auth');
 
-// IBM Watson Assistant setup
-const assistant = new AssistantV2({
-    version: process.env.WATSON_ASSISTANT_VERSION,
-    authenticator: new IamAuthenticator({
-        apikey: process.env.WATSON_API_KEY,
-    }),
-    serviceUrl: process.env.WATSON_URL,
-});
+// Constants
+const API_URL = process.env.WATSON_URL;
+const IAM_URL = process.env.IAM_URL;
+const API_KEY = process.env.WATSON_API_KEY;
 
-    // Start conversation with Watson Assistant
-exports.startConversation = async (req, res) => {
-    const { sessionId, disease, message } = req.body;
-
-    try {
-        let session;
-        if (!sessionId) {
-            const sessionResponse = await assistant.createSession({
-                assistantId: process.env.WATSON_ASSISTANT_ID,
-            });
-            session = sessionResponse.result.session_id;
-            } else {
-            session = sessionId;
-        }
-
-        const messageResponse = await assistant.message({
-        assistantId: process.env.WATSON_ASSISTANT_ID,
-        sessionId: session,
-        input: {
-            'message_type': 'text',
-            'text': `${message}`,
+// Function to get IAM token
+async function getIAMToken() {
+  console.log('Attempting to get IAM token with API key:', API_KEY);
+  
+  try {
+    const response = await axios.post(IAM_URL, 
+      `grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey=${API_KEY}`, 
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        });
+      }
+    );
 
-        res.json({
-            sessionId: session,
-            watsonResponse: messageResponse.result.output.generic.map(item => item.text),
-        });
-    } catch (error) {
-        console.error('Error during interaction with Watson Assistant:', error);
-        res.status(500).json({ error: error.message });
+    if (response.status !== 200) {
+      console.error('IAM Token Error Response:', response.data);
+      throw new Error('Failed to get IAM token');
     }
+
+    console.log('Successfully got IAM token');
+    return response.data.access_token;
+  } catch (error) {
+    console.error('Error fetching IAM token:', error.message);
+    throw new Error('Failed to get IAM token');
+  }
+}
+
+// Route handler to interact with Watson API
+exports.postMessage = async (req, res) => {
+  try {
+    const { message } = req.body;
+    console.log('Received message:', message);
+
+    // Get IAM token
+    const accessToken = await getIAMToken();
+    console.log('Access token obtained:', accessToken ? 'Yes' : 'No');
+
+    // Prepare body for the Watson API request
+    const body = {
+      input: `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. \nYour answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n${message}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`,
+      parameters: {
+        decoding_method: "greedy",
+        max_new_tokens: 3,
+        min_new_tokens: 0,
+        stop_sequences: [],
+        repetition_penalty: 1
+      },
+      model_id: process.env.WATSON_MODEL_ID,
+      project_id: process.env.WATSON_PROJECT_ID
+    };
+
+    // Make the request to the Watson API
+    console.log('Making request to Watson API...');
+    const response = await axios.post(API_URL, body, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      }
+    });
+
+    if (response.status !== 200) {
+      console.error('Watson API Error Response:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: response.data
+      });
+      throw new Error(`API call failed: ${response.statusText}`);
+    }
+
+    // Return the response from Watson API
+    const data = response.data;
+    console.log('Watson API Response:', data);
+    res.json({ response: data.results[0].generated_text });
+
+  } catch (error) {
+    console.error('Error during Watson API interaction:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    res.status(500).json({ error: 'Failed to process request' });
+  }
 };
