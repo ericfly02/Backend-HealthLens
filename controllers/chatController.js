@@ -40,7 +40,7 @@ exports.startConversation = async (req, res) => {
 
     // Prepare body for the Watson API request
     const body = {
-        input: `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. \nYour answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n${message}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`,
+        input: `<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are given a user question, and please write clean, concise and accurate answer to the question.\nYou may only answer questions about skin, eye and nails conditions, nothing else. If the user's question is about anything that is not a skin, eye or nail condition, please say: I don't know anything about that\nYour answer must be correct, accurate and written by an expert using an unbiased and professional tone. Please limit to 512 tokens.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n${message}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n`,
         parameters: {
           decoding_method: "greedy",
           max_new_tokens: 100,
