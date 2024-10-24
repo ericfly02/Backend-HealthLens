@@ -8,18 +8,23 @@ const path = require('path');
 const corsOptions = {
     origin: 'https://www.healthlens.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], 
-    allowedHeaders: ['Content-Type', 'Authorization'], 
-    credentials: true
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 200 // For legacy browsers that choke on 204
 };
 
 // Initialize Express app
 const app = express();
 
-// Middleware
+// Apply CORS middleware globally
 app.use(cors(corsOptions));
+
+// Middleware
 app.use(bodyParser.json());
 app.use('/public', express.static(path.join(__dirname, 'public')));
-app.options('*', cors(corsOptions)); // Handle preflight requests for all routes
+
+// Handle preflight `OPTIONS` requests globally
+app.options('*', cors(corsOptions)); 
 
 // Import Routes
 const authRoutes = require('./routes/auth');
@@ -35,5 +40,13 @@ app.use('/user', userRoutes);
 app.use('/map', mapRoutes);
 app.use('/speech', speechToTextRoutes);
 
-// Export the app (remove app.listen)
+// Error handling for CORS issues
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://www.healthlens.app");
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,PATCH");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    next();
+});
+
+// Export the app
 module.exports = app;
